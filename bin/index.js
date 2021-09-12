@@ -7,6 +7,8 @@ import yargs from "yargs";
 /// Control docker container status using docker-compose
 /// Get status of container
 
+yargs.usage('Usage: $0 <command> [options]')
+
 yargs.command({
     command: 'env',
     describe: 'Create .env file',
