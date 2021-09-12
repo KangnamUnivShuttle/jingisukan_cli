@@ -1,0 +1,29 @@
+{
+  "name": "jingisukan_cli",
+  "version": "1.0.0",
+  "description": "Cli that manage chat plugin docker container",
+  "main": "bin/index.js",
+  "scripts": {
+    "inst": "npm install -g .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KangnamUnivShuttle/jingisukan_cli.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KangnamUnivShuttle/jingisukan_cli/issues"
+  },
+  "homepage": "https://github.com/KangnamUnivShuttle/jingisukan_cli#readme",
+  "bin": {
+    "jingisukan": "./bin/index.js"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
+}
