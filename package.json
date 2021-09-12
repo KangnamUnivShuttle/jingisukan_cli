@@ -25,6 +25,7 @@
     "jingisukan": "./bin/index.js"
   },
   "devDependencies": {
+    "eslint": "^7.32.0",
     "jest": "^23.6.0"
   }
 }

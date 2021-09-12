@@ -144,7 +144,7 @@ module.exports = {
   // ],
 
   // The regexp pattern Jest uses to detect test files
-  testRegex: "/tests\/\\w+.spec.js",
+  testRegex: "/tests/\\w+.spec.js",
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: null,
