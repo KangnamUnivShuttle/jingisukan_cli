@@ -6,7 +6,9 @@
   "scripts": {
     "inst": "npm install -g .",
     "test": "jest",
-    "test:init": "jest --init"
+    "test:init": "jest --init",
+    "lint": "eslint bin/**",
+    "lint:fix": "eslint bin/** --fix"
   },
   "repository": {
     "type": "git",
