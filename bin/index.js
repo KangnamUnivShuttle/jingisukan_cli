@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 import yargs from "yargs";
+import { exportDockerComposeYAML } from './docker.js';
 
 /// TODO:
 /// Create env file
@@ -43,6 +44,16 @@ yargs.command({
             desc: 'Name of build image and container name.',
             demandOption: true
         },
+        port: {
+            type: 'string',
+            desc: 'Port for container.',
+            demandOption: true
+        },
+        path: {
+            type: 'string',
+            desc: 'Export path.',
+            demandOption: true
+        },
         env: {
             type: 'boolean',
             desc: 'Use env.',
@@ -51,6 +62,7 @@ yargs.command({
     },
     handler: (args) => {
         console.log('new', args);
+        exportDockerComposeYAML(args)
     }
 })
 
