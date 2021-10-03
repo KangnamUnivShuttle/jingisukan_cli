@@ -8,7 +8,7 @@ export function exportDockerFile(options) {
     const {
         url = '',
         name = 'TEST',
-        path = '.'
+        path = '.',
     } = options
 
     if (!isGitUrl(url) && url.includes('/KangnamUnivShuttle/')) {
@@ -19,6 +19,9 @@ export function exportDockerFile(options) {
         //     "from": "node:14.18"
         // },
         {
+            "run": ["npm", "install", "pm2@5.1.2", "-g"]
+        },
+        {
             "run": ["adduser", "--disabled-password", "-gecos", "", "testuser"]
         },
         {
@@ -28,13 +31,18 @@ export function exportDockerFile(options) {
             "working_dir": "/home/testuser/"
         },
         {
-            "run": ["git", "clone", url, "./app"]
+            "run": ["git", "clone", `${url}`, "./app"]
         },
         {
             "working_dir": "/home/testuser/app"
         },
         {
             "run": ["npm", "i"]
+        },
+        {
+            "copy": {
+                "ecosystem.config.js" : "./"
+            }
         },
         // {
         //   "env": {
@@ -43,13 +51,10 @@ export function exportDockerFile(options) {
         //   }
         // },
         {
-            "cmd": ["-f", "/dev/null"]
+            "expose": [`3000/tcp`]
         },
         {
-            "expose": ["5000/tcp"]
-        },
-        {
-            "shell": ["npm", "start"]
+            "cmd": ["pm2-runtime", "start", "ecosystem.config.js", "--env", "production"]
         },
     ]
 
@@ -70,7 +75,7 @@ export function exportDockerComposeYAML(options) {
         cpu = '0.5',
         ram = '128M',
         name = 'TEST',
-        port = '5000',
+        port = '10000',
         path = '.'
     } = options
 
@@ -92,7 +97,7 @@ export function exportDockerComposeYAML(options) {
                 container_name: name,
                 restart: 'always',
                 networks: ['infra_chatbot'],
-                ports: [`${port}:80`],
+                ports: [`${port}:3000`],
                 deploy: {
                     resources: {
                         limits: {
@@ -138,7 +143,7 @@ export function runDockerCompose(options) {
             command = `docker-compose --file ${path}/${name}/docker-compose.yaml rm -f`
             break;
         case 'build':
-            command = `docker-compose --file ${path}/${name}/docker-compose.yaml build`
+            command = `docker-compose --file ${path}/${name}/docker-compose.yaml build --no-cache`
             break;
         default:
             throw new Error(`Unexpected status detected, ${status}!=[start|stop|remove]`)

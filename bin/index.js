@@ -2,6 +2,7 @@
 import yargs from "yargs";
 // https://www.daleseo.com/js-node-es-modules/#:~:text=%ED%99%95%EC%9E%A5%EC%9E%90%EB%A5%BC%20%ED%8F%AC%ED%95%A8%ED%95%B4%EC%84%9C%20%EA%B2%BD%EB%A1%9C%EB%A5%BC%20%EB%AA%85%EC%8B%9C%ED%95%B4%EC%A3%BC%EB%A9%B4%20%EC%A0%95%EC%83%81%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EC%9E%91%EB%8F%99%ED%95%A9%EB%8B%88%EB%8B%A4.
 import { exportDockerFile, exportDockerComposeYAML, runDockerCompose, checkDockerContainerStatus, runPrune, removeImage } from './docker.js';
+import { exportEcosystemConfig } from './pm2.js'
 
 /// TODO:
 /// Create env file
@@ -23,6 +24,27 @@ yargs.command({
     },
     handler: (args) => {
         console.log('env', args);
+    }
+})
+
+yargs.command({
+    command: 'ecosystem',
+    describe: 'Create ecosystem.config file',
+    builder: {
+        name: {
+            type: 'string',
+            desc: 'Name of docker image',
+            demandOption: true
+        },
+        path: {
+            type: 'string',
+            desc: 'Path of docker image',
+            demandOption: true
+        }
+    },
+    handler: (args) => {
+        console.log('ecosystem', args);
+        exportEcosystemConfig(args)
     }
 })
 

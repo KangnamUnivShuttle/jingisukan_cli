@@ -11,7 +11,7 @@ services:
     networks:
       - infra_chatbot
     ports:
-      - '5000:80'
+      - '10000:3000'
     deploy:
       resources:
         limits:
