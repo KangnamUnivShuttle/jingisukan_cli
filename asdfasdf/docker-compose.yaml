@@ -1,0 +1,19 @@
+version: '3'
+networks:
+  chatbot:
+    external: true
+services:
+  plugin_node:
+    image: asdfasdf
+    build: ./
+    container_name: asdfasdf
+    restart: always
+    networks:
+      - chatbot
+    ports:
+      - '5000:80'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 128M

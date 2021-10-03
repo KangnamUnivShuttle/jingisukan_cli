@@ -33,6 +33,8 @@
   },
   "type": "module",
   "dependencies": {
+    "dockerfile-generator": "^4.0.12",
+    "is-git-url": "^1.0.0",
     "write-yaml": "^1.0.0"
   }
 }

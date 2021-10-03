@@ -1,5 +1,66 @@
 import yaml from 'write-yaml'
 import { exec } from 'child_process'
+import { generateDockerFileFromArray } from 'dockerfile-generator/lib/dockerGenerator.js'
+import isGitUrl from 'is-git-url'
+import { writeFile } from 'fs'
+
+export function exportDockerFile(options) {
+    const {
+        url = '',
+        name = 'TEST',
+        path = '.'
+    } = options
+
+    if (!isGitUrl(url) && url.includes('/KangnamUnivShuttle/')) {
+        throw new Error('Url must be github url')
+    }
+    const commands = [
+        // {
+        //     "from": "node:14.18"
+        // },
+        {
+            "run": ["adduser", "--disabled-password", "-gecos", "", "testuser"]
+        },
+        {
+            "user": "testuser"
+        },
+        {
+            "working_dir": "/home/testuser/"
+        },
+        {
+            "run": ["git", "clone", url, "."]
+        },
+        {
+            "run": ["npm", "i"]
+        },
+        // {
+        //   "env": {
+        //     "env1": "value1",
+        //     "env2": "value2"
+        //   }
+        // },
+        {
+            "cmd": ["-f", "/dev/null"]
+        },
+        {
+            "expose": ["5000/tcp"]
+        },
+        {
+            "shell": ["npm", "start"]
+        },
+    ]
+
+    // Because of dockerGenerator opensource error
+    const result = `FROM node:14.18
+${generateDockerFileFromArray(commands)}`
+    writeFile(`${path}/${name}/Dockerfile`, result, (err) => {
+        if (err) {
+            console.error(`[docker] [exportDockerFile] error: ${err.message}`)
+            return;
+        }
+        console.log('[docker] [exportDockerFile] done')
+    })
+}
 
 export function exportDockerComposeYAML(options) {
     const {
@@ -24,7 +85,7 @@ export function exportDockerComposeYAML(options) {
         services: {
             plugin_node: {
                 image: `${name}`,
-                build: `${path}/${name}/`,
+                build: `${path}/`,
                 container_name: name,
                 restart: 'always',
                 networks: ['chatbot'],
@@ -46,7 +107,7 @@ export function exportDockerComposeYAML(options) {
             return;
         }
         console.log('[docker] [exportDockerComposeYAML] done');
-    });      
+    });
 }
 
 export function runDockerCompose(options) {
@@ -56,7 +117,7 @@ export function runDockerCompose(options) {
         path = '.'
     } = options
     let command = '';
-    switch(status) {
+    switch (status) {
         case 'start':
             command = `docker-compose up -d --file=${path}/${name}/docker-compose.yaml`
             break;
@@ -82,7 +143,7 @@ export function runDockerCompose(options) {
     });
 }
 
-export function checkDockerContainerStatus (name) {
+export function checkDockerContainerStatus(name) {
     const command = `docker ps --filter "name=${name}"`
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -97,7 +158,7 @@ export function checkDockerContainerStatus (name) {
     });
 }
 
-export function runPrune () {
+export function runPrune() {
     const command = `docker system prune -f`
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -112,7 +173,7 @@ export function runPrune () {
     });
 }
 
-export function removeImage (name) {
+export function removeImage(name) {
     if (!name.match(/^[a-zA-Z]{1}[a-zA-Z0-9_.-]{7,15}$/g)) {
         throw new Error('Unavailable letter inside of name')
     }
