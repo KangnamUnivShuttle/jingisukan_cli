@@ -33,3 +33,7 @@ jingisukan service --name=asdfasdf --path=. --status=start
 ```
 jingisukan ecosystem --name=asdfasdf --path=.
 ```
+
+### TIP
+
+https://stackoverflow.com/questions/39468841/is-it-possible-to-start-a-stopped-container-from-another-container
