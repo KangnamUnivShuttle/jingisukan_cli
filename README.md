@@ -16,3 +16,16 @@ Usage: jingisukan <command> [options]
   --version  버전 넘버를 보여줍니다                                       [여부]
 stories2@gimhyeon-uui-MacBookPro jingisukan_cli % 
 ```
+
+
+```
+jingisukan new --cpu=0.1 --ram=128M --name=asdfasdf --port=5000 --path='.'
+```
+
+```
+jingisukan dockerfile --url=https://github.com/KangnamUnivShuttle/plugin_hello_world.git --name=asdfasdf --path=.
+```
+
+```
+jingisukan service --name=asdfasdf --path=. --status=start
+```

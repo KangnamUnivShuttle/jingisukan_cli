@@ -28,7 +28,10 @@ export function exportDockerFile(options) {
             "working_dir": "/home/testuser/"
         },
         {
-            "run": ["git", "clone", url, "."]
+            "run": ["git", "clone", url, "./app"]
+        },
+        {
+            "working_dir": "/home/testuser/app"
         },
         {
             "run": ["npm", "i"]
@@ -78,7 +81,7 @@ export function exportDockerComposeYAML(options) {
     const data = {
         version: '3',
         networks: {
-            chatbot: {
+            infra_chatbot: {
                 external: true
             }
         },
@@ -88,7 +91,7 @@ export function exportDockerComposeYAML(options) {
                 build: `${path}/`,
                 container_name: name,
                 restart: 'always',
-                networks: ['chatbot'],
+                networks: ['infra_chatbot'],
                 ports: [`${port}:80`],
                 deploy: {
                     resources: {
@@ -96,6 +99,13 @@ export function exportDockerComposeYAML(options) {
                             cpus: cpu,
                             memory: ram
                         }
+                    }
+                },
+                logging: {
+                    driver: 'json-file',
+                    options: {
+                        "max-file": '5',
+                        "max-size": '10m'
                     }
                 }
             }
@@ -119,13 +129,16 @@ export function runDockerCompose(options) {
     let command = '';
     switch (status) {
         case 'start':
-            command = `docker-compose up -d --file=${path}/${name}/docker-compose.yaml`
+            command = `docker-compose --file ${path}/${name}/docker-compose.yaml up -d`
             break;
         case 'stop':
-            command = `docker-compose stop --file=${path}/${name}/docker-compose.yaml`
+            command = `docker-compose --file ${path}/${name}/docker-compose.yaml stop`
             break;
         case 'remove':
-            command = `docker-compose rm -f --file=${path}/${name}/docker-compose.yaml`
+            command = `docker-compose --file ${path}/${name}/docker-compose.yaml rm -f`
+            break;
+        case 'build':
+            command = `docker-compose --file ${path}/${name}/docker-compose.yaml build`
             break;
         default:
             throw new Error(`Unexpected status detected, ${status}!=[start|stop|remove]`)
