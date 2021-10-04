@@ -1,6 +1,14 @@
 # jingisukan_cli
 Cli that manage chat plugin docker container
 
+## How to install
+
+```
+npm run inst
+```
+
+### How to run
+
 ```bash
 stories2@gimhyeon-uui-MacBookPro jingisukan_cli % jingisukan --help
 Usage: jingisukan <command> [options]
