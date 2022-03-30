@@ -2,7 +2,7 @@ import yaml from 'write-yaml'
 import { exec } from 'child_process'
 import { generateDockerFileFromArray } from 'dockerfile-generator/lib/dockerGenerator.js'
 import isGitUrl from 'is-git-url'
-import { writeFile } from 'fs'
+import { writeFile, createWriteStream } from 'fs'
 
 export function exportEnvFile(options) {
     const {
@@ -11,17 +11,20 @@ export function exportEnvFile(options) {
         data = ['NODE_ENV=production']
     } = options
 
-    const envWithLineBreak = data.join('\n')
+    // const envWithLineBreak = data.join('\n')
 
-    console.log('[docker] [exportEnvFile]: ', envWithLineBreak)
-
-    writeFile(`${path}/${name}/.env`, envWithLineBreak, (err) => {
-        if (err) {
-            console.error(`[docker] [exportEnvFile] error: ${err.message}`)
-            return;
-        }
-        console.log('[docker] [exportEnvFile] done')
+    // console.log('[docker] [exportEnvFile]: ', envWithLineBreak)
+    // https://stackoverflow.com/a/33419220/7270469
+    const logger = createWriteStream(`${path}/${name}/.env`, {
+        flags: 'a'
     })
+    data.forEach(val => {
+        console.log(`[docker] [exportEnvFile] write: ${val}`)
+        logger.write(`${val}\n`)
+    })
+    logger.end()
+
+    console.log('[docker] [exportEnvFile] done')
 }
 
 export function exportDockerFile(options) {
