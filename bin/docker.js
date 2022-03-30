@@ -85,7 +85,7 @@ export function exportDockerComposeYAML(options) {
 
     const node_info = {
         image: `${name}`,
-        build: `${path}/`,
+        build: `./`,
         container_name: `plugin_node_${name}`,
         restart: 'always',
         networks: ['infra_chatbot'],
