@@ -32,7 +32,7 @@ stories2@gimhyeon-uui-MacBookPro jingisukan_cli %
 - Generate docker-compose.yaml
 
 ```
-jingisukan new --cpu=0.1 --ram=128M --name=asdfasdf --port=10000 --path='.'
+jingisukan new --cpu=0.1 --ram=128M --name=asdfasdf --port=10000 --path='.' --env=true
 
 new {
   _: [ 'new' ],
@@ -164,6 +164,12 @@ jingisukan rmi --name=asdfasdf
 rmi { _: [ 'rmi' ], name: 'asdfasdf', '$0': 'jingisukan' }
 Untagged: asdfasdf:latest
 Deleted: sha256:c98e80742775c0bf9dd9bd0290093b061ab3be860774e2bc5b575f72e6842bb4
+```
+
+- Gen .env
+
+```
+jingisukan env --name='asdfasdf' --path='.' --data='h=a' --data='bas=2edd'
 ```
 
 ### TIP

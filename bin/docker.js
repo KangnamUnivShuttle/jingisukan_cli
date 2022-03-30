@@ -4,6 +4,22 @@ import { generateDockerFileFromArray } from 'dockerfile-generator/lib/dockerGene
 import isGitUrl from 'is-git-url'
 import { writeFile } from 'fs'
 
+export function exportEnvFile(options) {
+    const {
+        name = 'TEST',
+        path = '.',
+        data = ['NODE_ENV=production']
+    } = options
+
+    writeFile(`${path}/${name}/.env`, data.join('\n'), (err) => {
+        if (err) {
+            console.error(`[docker] [exportEnvFile] error: ${err.message}`)
+            return;
+        }
+        console.log('[docker] [exportEnvFile] done')
+    })
+}
+
 export function exportDockerFile(options) {
     const {
         url = '',
@@ -77,6 +93,7 @@ export function exportDockerComposeYAML(options) {
         name = 'TEST',
         // port = '10000',
         path = '.',
+        env = true
     } = options
 
     if (!name.match(/^[a-zA-Z]{1}[a-zA-Z0-9_.-]{7,15}$/g)) {
@@ -104,7 +121,8 @@ export function exportDockerComposeYAML(options) {
                 "max-file": '5',
                 "max-size": '10m'
             }
-        }
+        },
+        env_file: env ? ['.env'] : []
     }
 
     const data = {
