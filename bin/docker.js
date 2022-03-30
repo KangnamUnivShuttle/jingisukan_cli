@@ -64,7 +64,7 @@ export function exportDockerFile(options) {
         },
         {
             "copy": {
-                "ecosystem.config.js" : "./"
+                "ecosystem.config.js" : "/home/testuser/app/ecosystem.config.js"
             }
         },
         // {
