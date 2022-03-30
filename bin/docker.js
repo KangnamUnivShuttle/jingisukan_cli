@@ -11,7 +11,11 @@ export function exportEnvFile(options) {
         data = ['NODE_ENV=production']
     } = options
 
-    writeFile(`${path}/${name}/.env`, data.join('\n'), (err) => {
+    const envWithLineBreak = data.join('\n')
+
+    console.log('[docker] [exportEnvFile]: ', envWithLineBreak)
+
+    writeFile(`${path}/${name}/.env`, envWithLineBreak, (err) => {
         if (err) {
             console.error(`[docker] [exportEnvFile] error: ${err.message}`)
             return;
