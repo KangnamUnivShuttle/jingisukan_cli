@@ -7,7 +7,7 @@ export function exportEcosystemConfig(options) {
     } = options
 
     const content = `module.exports = [{
-        script: './index.js',
+        script: './src/server.js',
         name: 'my-server',
         exec_mode: 'cluster',
         instances: 1
