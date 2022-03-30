@@ -51,7 +51,7 @@ export function exportDockerFile(options) {
         //   }
         // },
         {
-            "expose": [`3000/tcp`]
+            "expose": [`15000/tcp`]
         },
         {
             "cmd": ["pm2-runtime", "start", "ecosystem.config.js", "--env", "production"]
@@ -75,12 +75,36 @@ export function exportDockerComposeYAML(options) {
         cpu = '0.5',
         ram = '128M',
         name = 'TEST',
-        port = '10000',
-        path = '.'
+        // port = '10000',
+        path = '.',
     } = options
 
     if (!name.match(/^[a-zA-Z]{1}[a-zA-Z0-9_.-]{7,15}$/g)) {
         throw new Error('Unavailable letter inside of name')
+    }
+
+    const node_info = {
+        image: `${name}`,
+        build: `${path}/`,
+        container_name: `plugin_node_${name}`,
+        restart: 'always',
+        networks: ['infra_chatbot'],
+        // ports: [`${port}:15000`],
+        deploy: {
+            resources: {
+                limits: {
+                    cpus: cpu,
+                    memory: ram
+                }
+            }
+        },
+        logging: {
+            driver: 'json-file',
+            options: {
+                "max-file": '5',
+                "max-size": '10m'
+            }
+        }
     }
 
     const data = {
@@ -91,31 +115,11 @@ export function exportDockerComposeYAML(options) {
             }
         },
         services: {
-            plugin_node: {
-                image: `${name}`,
-                build: `${path}/`,
-                container_name: name,
-                restart: 'always',
-                networks: ['infra_chatbot'],
-                ports: [`${port}:3000`],
-                deploy: {
-                    resources: {
-                        limits: {
-                            cpus: cpu,
-                            memory: ram
-                        }
-                    }
-                },
-                logging: {
-                    driver: 'json-file',
-                    options: {
-                        "max-file": '5',
-                        "max-size": '10m'
-                    }
-                }
-            }
+            
         }
     }
+
+    data.services[`plugin_node_${name}`] = node_info
     yaml(`${path}/${name}/docker-compose.yaml`, data, (err) => {
         if (err) {
             console.error(`[docker] [exportDockerComposeYAML] error: ${err.message}`)
