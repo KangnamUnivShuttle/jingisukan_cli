@@ -2,7 +2,7 @@ import yaml from 'write-yaml'
 import { exec } from 'child_process'
 import { generateDockerFileFromArray } from 'dockerfile-generator/lib/dockerGenerator.js'
 import isGitUrl from 'is-git-url'
-import { writeFile, createWriteStream } from 'fs'
+import { writeFile, createWriteStream, existsSync, unlinkSync } from 'fs'
 
 export function exportEnvFile(options) {
     const {
@@ -15,7 +15,13 @@ export function exportEnvFile(options) {
 
     // console.log('[docker] [exportEnvFile]: ', envWithLineBreak)
     // https://stackoverflow.com/a/33419220/7270469
-    const logger = createWriteStream(`${path}/${name}/.env`, {
+
+    const envPath = `${path}/${name}/.env`
+    if (existsSync(envPath)) {
+        unlinkSync(envPath)
+    }
+
+    const logger = createWriteStream(envPath, {
         flags: 'a'
     })
     data.forEach(val => {
