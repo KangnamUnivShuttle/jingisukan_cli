@@ -39,25 +39,30 @@ export function exportDockerFile(options) {
     // {
     //     "from": "node:14.18"
     // },
-    {
-      ENV: ["TZ", "Asia/Seoul"],
-    },
-    {
-      RUN: [
-        "ln",
-        "-snf",
-        "/usr/share/zoneinfo/$TZ",
-        "/etc/localtime",
-        "&&",
-        "echo",
-        "$TZ",
-        ">",
-        "/etc/timezone",
-      ],
-    },
-    {
-      RUN: ["date"],
-    },
+    // {
+    //   ENV: ["TZ", "Asia/Seoul"],
+    // },
+    // {
+    //   env: {
+    //     TZ: "Asia/Seoul",
+    //   },
+    // },
+    // {
+    //   RUN: [
+    //     "ln",
+    //     "-snf",
+    //     "/usr/share/zoneinfo/$TZ",
+    //     "/etc/localtime",
+    //     "&&",
+    //     "echo",
+    //     "$TZ",
+    //     ">",
+    //     "/etc/timezone",
+    //   ],
+    // },
+    // {
+    //   RUN: ["date"],
+    // },
     {
       run: ["npm", "install", "pm2@5.1.2", "-g"],
     },
@@ -106,6 +111,9 @@ export function exportDockerFile(options) {
 
   // Because of dockerGenerator opensource error
   const result = `FROM node:14.18
+  ENV TZ Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN date
 ${generateDockerFileFromArray(commands)}`;
   writeFile(`${path}/${name}/Dockerfile`, result, (err) => {
     if (err) {
